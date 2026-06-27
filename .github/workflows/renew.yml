@@ -43,7 +43,20 @@ jobs:
       - name: 安装 Python 依赖
         run: |
           pip install -r requirements.txt
-          python -c "from cloakbrowser import ensure_binary; ensure_binary()"
+          python -c "from cloakbrowser import ensure_binary; ensure_binary()" || true
+
+      - name: 校验 CloakBrowser 二进制
+        run: |
+          python -c "
+          from cloakbrowser import ensure_binary
+          import sys
+          try:
+              path = ensure_binary()
+              print('二进制路径:', path)
+          except Exception as e:
+              print('二进制校验失败:', e)
+              sys.exit(1)
+          "
 
       - name: 运行脚本
         env:
